@@ -1,9 +1,8 @@
 const http = require('http');
-
 const server = http.createServer();
 
 const io = require('socket.io')(server, {
-  cors: { origin: 'https://render-chat-back.onrender.com/' }
+  cors: { origin: '*' }
 });
 
 io.on('connection', (socket) => {
@@ -14,4 +13,4 @@ io.on('connection', (socket) => {
   })
 });
 
-server.listen('https://render-chat-back.onrender.com/');
+server.listen(8084);
