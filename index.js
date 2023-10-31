@@ -1,17 +1,17 @@
 const http = require('http');
 const express = require('express');
-const cors = require('cors'); // Agrega la importación de cors
+const cors = require('cors');
+const socketio = require('socket.io');
+const db = require('./src/database/db.js');
+const clientRoutes = require('./src/routes/routes');
 
 const app = express();
 const server = http.createServer(app);
+const io = socketio(server);
 
-const io = require('socket.io')(server, {
-  cors: {
-    origin: '*' // Esto permitirá cualquier origen, pero en producción, debes configurar esto adecuadamente
-  }
-});
-
-app.use(cors()); // Habilita el middleware de cors
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 io.on('connection', (socket) => {
   console.log('Conectado al servidor');
@@ -21,4 +21,10 @@ io.on('connection', (socket) => {
   });
 });
 
-server.listen(8084);
+app.use('/clients', clientRoutes);
+
+const PORT = 8000; // Cambia el puerto según tus necesidades
+
+server.listen(PORT, () => {
+  console.log(`Servidor conectado al puerto ${PORT}`);
+});
