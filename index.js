@@ -1,16 +1,17 @@
 const http = require('http');
 const express = require('express');
-const cors = require('cors'); // Importa el módulo cors
+const cors = require('cors'); // Agrega la importación de cors
 
 const app = express();
 const server = http.createServer(app);
 
-const io = require('socket.io')(server);
+const io = require('socket.io')(server, {
+  cors: {
+    origin: '*' // Esto permitirá cualquier origen, pero en producción, debes configurar esto adecuadamente
+  }
+});
 
-// Habilita el middleware de cors y configura Access-Control-Allow-Origin: *
-app.use(cors({
-  origin: '*',
-}));
+app.use(cors()); // Habilita el middleware de cors
 
 io.on('connection', (socket) => {
   console.log('Conectado al servidor');
@@ -20,6 +21,4 @@ io.on('connection', (socket) => {
   });
 });
 
-server.listen(8084, () => {
-  console.log('Servidor Socket.io escuchando en el puerto 8084');
-});
+server.listen(8084);
